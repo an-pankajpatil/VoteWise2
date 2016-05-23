@@ -29,8 +29,8 @@ module.exports = function ( api, app, User ) {
       else if ( user ) {
 
           const password = bcrypt.compareSync(req.body.password, user.password);
-          // console.log(hello);
-          if ( password  ) {
+
+          if ( password ) {
 
             const token = jwt.sign(user, app.get('superSecret'), {
               // expiresInMinutes: 1440 // expires in 24 hours
@@ -54,21 +54,23 @@ module.exports = function ( api, app, User ) {
 });
 });
 
-
-
   api.use(function(req, res, next) {
     'use strict';
     // check header or url parameters or post parameters for token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    // console.log(token);
 
     // decode token
     if ( token ) {
 
       // verifies secret and checks exp
       jwt.verify(token, app.get('superSecret'), function(err, decoded) {
-        if (err) {
-          return res.json({ success: false, message: 'Failed to authenticate token.' });
-        } else {
+        // console.log(decoded);
+        if ( err ) {
+          return res.json({ success: false, message: 'Failed to authenticate token.', error: err });
+        }
+        else {
+          console.log(req.decoded);
           // if everything is good, save to request for use in other routes
           req.decoded = decoded;
           next();

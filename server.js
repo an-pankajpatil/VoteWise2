@@ -40,35 +40,78 @@ app.use(bodyParser.json());
 // use morgan to log requests to the console
 app.use(morgan('dev'));
 
-// Dev Test User
-app.post('/sigup', function(req, res) {
-  console.log(req);
-// bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-//
-//     // create a sample user
-//
-//     var nick = new User({
-//       name: 'Jim Jones',
-//       password: hash,
-//       admin: true
-//     });
-//   console.log(nick);
-//     // save the sample user
-//     nick.save(function(err) {
-//       if (err) throw err;
-//
-//       console.log('User saved successfully');
-//       res.json({ success: true });
-//     });
-//     return hash;
-//   });
+app.post('/signup', function(req, res) {
+  var params = req.body;
+  // console.log(req.body);
+  bcrypt.hash(params.password, saltRounds, function(err, hash) {
+    console.log(params);
+    if ( err ) throw err;
+      // create a user
+      var user = new User({
+        name: params.name,
+        password: hash,
+        admin: false
+      });
+
+      // save the user
+      user.save(function(err) {
+        if (err) throw err;
+
+        console.log('User saved successfully');
+        res.json({ success: true });
+      });
+      return hash;
+    });
 
 });
 
-// API ROUTES -------------------
+app.post('/authenticate', function(req, result) {
+  console.log(req.body);
+  // find the user
+User.findOne({
+  name: req.body.name
+}, function ( err, user ) {
+  if ( err ) throw err;
 
-// get an instance of the router for api routes
-// var apiRoutes = express.Router();
+});
+
+  User.findOne({
+    name: req.body.name
+  }, function(err, user ) {
+    console.log(user);
+    if ( err ) throw err;
+
+    if ( !user ) {
+      result.json({ success: false, message: 'Authentication failed. no user'  });
+    }
+
+    else if ( user ) {
+
+        var password = bcrypt.compareSync(req.body.password, user.password);
+        // console.log(hello);
+        if ( password  ) {
+
+          var token = jwt.sign(user, app.get('superSecret'), {
+            // expiresInMinutes: 1440 // expires in 24 hours
+          });
+
+          // If user is found and password is right
+          // create a token
+          // return the information including token as JSON
+          result.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token
+        });
+
+        }
+        else {
+          result.json({ sucess: false, message: 'Authentication failed. no password'});
+    }
+
+}
+});
+});
 
 // API ROUTES -------------------
 UserRoutes( app );
