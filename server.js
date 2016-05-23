@@ -41,40 +41,28 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // Dev Test User
-app.get('/setup', function(req, res) {
-
-bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-    // create a sample user
-    var nick = new User({
-      name: 'Jim Jones',
-      password: hash,
-      admin: true
-    });
-  console.log(nick);
-    // save the sample user
-    nick.save(function(err) {
-      if (err) throw err;
-
-      console.log('User saved successfully');
-      res.json({ success: true });
-    });
-    return hash;
-  });
-// console.log(pass);
-//   // create a sample user
-//   var nick = new User({
-//     name: 'johny',
-//     password: hash,
-//     admin: true
-//   });
-// console.log(nick);
-//   // save the sample user
-//   nick.save(function(err) {
-//     if (err) throw err;
+app.post('/sigup', function(req, res) {
+  console.log(req);
+// bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
 //
-//     console.log('User saved successfully');
-//     res.json({ success: true });
-  // });
+//     // create a sample user
+//
+//     var nick = new User({
+//       name: 'Jim Jones',
+//       password: hash,
+//       admin: true
+//     });
+//   console.log(nick);
+//     // save the sample user
+//     nick.save(function(err) {
+//       if (err) throw err;
+//
+//       console.log('User saved successfully');
+//       res.json({ success: true });
+//     });
+//     return hash;
+//   });
+
 });
 
 // API ROUTES -------------------
