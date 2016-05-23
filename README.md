@@ -13,3 +13,5 @@ Restful Api for VoteWise
 http://localhost:8080/admin
 
 Make a GET, DELETE, PUT, or POST to http://localhost:8080/admin/user to GET a list of users, DELETE a user, or make a user.
+
+Random password: GET request to http://localhost:8080/admin/randompass it will default to 8 but if longer is needed you can pass it something like this http://localhost:8080/admin/randompass?length=10.

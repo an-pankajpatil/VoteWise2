@@ -3,6 +3,7 @@ var express = require ('express');
 var User = require('../../models/user');
 var jwt = require('jsonwebtoken');
 var auth = require('../../middleware/userAuth');
+var helpers = require('../../helpers/admin');
 
 module.exports = function( app ) {
   var admin = express.Router();
@@ -48,6 +49,12 @@ module.exports = function( app ) {
         res.json( { success: true }  );
       });
     }
+  });
+
+  admin.get('/randompass', function ( req, res ) {
+    var length = req.param('length');
+    res.json( { password: helpers.rdmNum( length ) } );
+
   });
 
 
