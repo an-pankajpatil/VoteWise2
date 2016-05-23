@@ -1,3 +1,4 @@
+
 // =======================
 // Import Packages========
 // =======================
@@ -6,11 +7,16 @@ var app         = express();
 var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
+var bcrypt      = require('bcrypt');
 
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get config file
-// var User   = require('./app/models/user'); // get mongoose model
+var User   = require('./app/models/user'); // get mongoose model
 var UserRoutes = require('./app/controllers/api/users');
+
+var saltRounds = 10;
+var myPlaintextPassword = 'password';
+var someOtherPlaintextPassword = 'password';
 
 // =======================
 // configuration =========
@@ -37,26 +43,44 @@ app.use(morgan('dev'));
 // Dev Test User
 app.get('/setup', function(req, res) {
 
-  // create a sample user
-  var nick = new User({
-    name: 'Luke Cage',
-    password: 'password',
-    admin: true
-  });
+bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
+    // create a sample user
+    var nick = new User({
+      name: 'Jim Jones',
+      password: hash,
+      admin: true
+    });
+  console.log(nick);
+    // save the sample user
+    nick.save(function(err) {
+      if (err) throw err;
 
-  // save the sample user
-  nick.save(function(err) {
-    if (err) throw err;
-
-    console.log('User saved successfully');
-    res.json({ success: true });
+      console.log('User saved successfully');
+      res.json({ success: true });
+    });
+    return hash;
   });
+// console.log(pass);
+//   // create a sample user
+//   var nick = new User({
+//     name: 'johny',
+//     password: hash,
+//     admin: true
+//   });
+// console.log(nick);
+//   // save the sample user
+//   nick.save(function(err) {
+//     if (err) throw err;
+//
+//     console.log('User saved successfully');
+//     res.json({ success: true });
+  // });
 });
 
 // API ROUTES -------------------
 
 // get an instance of the router for api routes
-var apiRoutes = express.Router();
+// var apiRoutes = express.Router();
 
 // API ROUTES -------------------
 UserRoutes( app );
