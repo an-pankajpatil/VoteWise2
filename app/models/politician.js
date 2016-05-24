@@ -4,12 +4,13 @@ var Schema = mongoose.Schema;
 
 // set up a mongoose model and pass it using module.exports
 module.exports = mongoose.model('Politician', new Schema({
-    name: String,
-    username: String,
-    password: String,
-    address: { street: String, city: String, state: String ,zip: String },
+    user: {
+      type: Schema.Types.ObjectId, ref: 'User'
+    }
     position: String, // this will be another table
-    contactInfo: { phone: String  }, // other info here
-    website: String
+    required: true,
+    contactInfo: { phone: String email:  }, // other info here
+    website: String,
+    questionsAnswered: Number
 
 }));

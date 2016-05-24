@@ -5,10 +5,22 @@ const Schema = mongoose.Schema;
 // set up a mongoose model and pass it using module.exports
 module.exports = mongoose.model('User', new Schema({
     name: String,
+    // required: true,
     username: String,
+    // required: true,
     email: String,
+    // required: true,
     password: String,
+    // required: true,
     admin: Boolean,
-    address: { street: String, city: String, state: String ,zip: String }
+    politician: Boolean,
+    press: Boolean,
+    politicianId: {
+      type: Schema.Types.ObjectId, ref: 'Politician'
+    },
+    address: {
+      type: Schema.Types.ObjectId, ref: 'Address'
+   }
+
 
 }));
