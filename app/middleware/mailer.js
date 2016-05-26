@@ -25,10 +25,10 @@ module.exports.apply = function ( app ) {
       if (err) {
         // handle error
         console.log(err);
-        res.send('There was an error sending the email');
+        // res.send('There was an error sending the email');
         return;
       }
-      res.send('Email Sent');
+      // res.send('Email Sent');
     });
   });
 
@@ -44,8 +44,12 @@ module.exports.mailTo = function ( app, email, subject ) {
     if (err) {
       // handle error
       console.log(err);
-      res.json({ success: false });
-      return;
+      // console.log(this);
+      // res.json({ success: false });
+      return false;
+    }
+    else {
+      return true;
     }
     // res.send('Email Sent');
 

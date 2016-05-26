@@ -8,4 +8,5 @@ module.exports = mongoose.model('Address', new Schema({
   street: String,
   streetNumber: Number,
   zip: String
+  
 }));

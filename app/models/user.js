@@ -14,10 +14,8 @@ module.exports = mongoose.model('User', new Schema({
     // required: true,
     admin: Boolean,
     politician: Boolean,
+    advocate: Boolean,
     press: Boolean,
-    politicianId: {
-      type: Schema.Types.ObjectId, ref: 'Politician'
-    },
     address: {
       type: Schema.Types.ObjectId, ref: 'Address'
    }

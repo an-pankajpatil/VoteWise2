@@ -4,15 +4,15 @@ var Schema = mongoose.Schema;
 
 // set up a mongoose model and pass it using module.exports
 module.exports = mongoose.model('Press', new Schema({
-    user: {
+    userId: {
       type: Schema.Types.ObjectId, ref: 'User'
     },
-    required: true,
+    // required: true,
     mediaOutlet: String,
-    required: true,
+    // required: true,
     areaOfInterest: {
       type: Schema.Types.ObjectId, ref: 'Category'
     },
-    required: true,
+    // required: true,
     confirmed: Boolean
 }));

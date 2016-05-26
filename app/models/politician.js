@@ -6,10 +6,9 @@ var Schema = mongoose.Schema;
 module.exports = mongoose.model('Politician', new Schema({
     user: {
       type: Schema.Types.ObjectId, ref: 'User'
-    }
+    },
     position: String, // this will be another table
-    required: true,
-    contactInfo: { phone: String email:  }, // other info here
+    // required: true,
     website: String,
     questionsAnswered: Number
 

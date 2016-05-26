@@ -26,7 +26,7 @@ module.exports = function( app ) {
           res.json( user );
         });
       }
-      // return list of users if no id
+      // return list of users if no id is procided
       else {
         User.find({}, function(err, users) {
           res.json( users );
