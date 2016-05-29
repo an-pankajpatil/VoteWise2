@@ -5,16 +5,20 @@ var Schema = mongoose.Schema;
 // set up a mongoose model and pass it using module.exports
 module.exports = mongoose.model('Advocate', new Schema({
     userId: {
-      type: Schema.Types.ObjectId, ref: 'User'
+      type: Schema.Types.ObjectId, ref: 'User',
+      required: true
     },
-    // required: true,
     areaOfInterest: {
-      type: Schema.Types.ObjectId, ref: 'Category'
+      type: Schema.Types.ObjectId, ref: 'Category',
+      required: true
     },
-    // required: true,
-    confirmed: Boolean,
-    // required: true,
-    url: String,
-    // required: true,
-    geoLocation: String //This will be another table
+    confirmed:{
+      type: Boolean,
+      required: true
+    },
+    url: {
+      type: String,
+      required: true
+    },
+    geoLocation: String 
 }));
