@@ -18,6 +18,13 @@ module.exports.validUsername = function ( username ) {
   return isValidUsername;
 }
 
+module.exports.response = function ( success, err ) {
+  if ( !err  ) {
+    err = false;
+  }
+  return { success: success, error: err };
+}
+
 module.exports.validPassword = function ( password ) {
   var isValidPassword = password.length >= 8;
 

@@ -1,6 +1,8 @@
 
 var express = require ('express');
 var User = require('../../models/user');
+var Advocate = require('../../models/advocate');
+var Interest = require('../../models/category');
 var jwt = require('jsonwebtoken');
 var auth = require('../../middleware/userAuth');
 var helpers = require('../../helpers/admin');
@@ -49,6 +51,35 @@ module.exports = function( app ) {
     else {
       res.json( { success: false } );
     }
+  });
+
+  admin.get('/advocate/all', function(req, res) {
+    // Id passed in, find id
+
+    Advocate.find( {} , function(err, user) {
+      if ( err ) { res.json( { sucess: flase, err: err } ) };
+      // console.log(user);
+      res.json( user );
+    });
+
+  });
+
+  admin.get('/advocate/:id', function(req, res) {
+    var id = req.param('id');
+    Advocate.findById( id , function(err, advocate) {
+      if ( err ) { res.json( { sucess: flase, err: err } ) };
+      return res.json( advocate );
+    });
+
+  });
+
+  admin.get('/interest/:id', function(req, res) {
+    var id = req.param('id');
+    Interest.findById( id , function( err, interest ) {
+      if ( err ) { res.json( { sucess: flase, err: err } ) };
+      return res.json( interest );
+    });
+
   });
 
   admin.delete('/user/:id', function(req, res) {

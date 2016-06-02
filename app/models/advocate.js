@@ -19,6 +19,5 @@ module.exports = mongoose.model('Advocate', new Schema({
     url: {
       type: String,
       required: true
-    },
-    geoLocation: String 
+    } 
 }));
