@@ -10,3 +10,9 @@ module.exports.validate = function ( v, regex, message, required ) {
     required: required
   }
 }
+
+module.exports.addSpace = function ( str ) {
+  
+  return str.replace(/-/g, ' ');
+
+}

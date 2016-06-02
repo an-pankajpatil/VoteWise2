@@ -42,7 +42,7 @@ app.use(morgan('dev'));
 // API ROUTES -------------------
 
 Controllers( app );
-
+mailer.apply( app );
 
 // =======================
 // start the server ======

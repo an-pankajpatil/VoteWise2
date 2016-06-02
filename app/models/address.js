@@ -8,6 +8,9 @@ module.exports = mongoose.model('Address', new Schema({
   county: String,
   street: String,
   streetNumber: Number,
-  zip: String
-  
+  zip: {
+    type: Number,
+    required: true
+  }
+
 }));

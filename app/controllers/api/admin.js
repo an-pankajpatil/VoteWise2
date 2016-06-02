@@ -6,6 +6,7 @@ var auth = require('../../middleware/userAuth');
 var helpers = require('../../helpers/admin');
 
 module.exports = function( app ) {
+
   var admin = express.Router();
   auth( admin, app, User );
 
@@ -13,7 +14,18 @@ module.exports = function( app ) {
     res.send(" Welcome to the VoteWise Admin API, make a request to /admin. Good spot for a dashboard.");
   });
 
-  admin.get('/user', function(req, res) {
+  admin.get('/user/all', function(req, res) {
+    // Id passed in, find id
+
+    User.find( {} , function(err, user) {
+      if ( err ) { res.json( { sucess: flase, err: err } ) };
+      // console.log(user);
+      res.json( user );
+    });
+
+  });
+
+  admin.get('/user/:id', function(req, res) {
     var admin = req.decoded._doc.admin;
     var id = req.param('id');
     // console.log(id);
@@ -39,7 +51,7 @@ module.exports = function( app ) {
     }
   });
 
-  admin.delete('/user', function(req, res) {
+  admin.delete('/user/:id', function(req, res) {
     var id = req.param('id');
     // console.log(id);
     // Id passed in, find id

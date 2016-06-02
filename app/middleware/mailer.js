@@ -16,22 +16,6 @@ module.exports.apply = function ( app ) {
     }
   });
 
-  app.get('/email', function (req, res) {
-    app.mailer.send('email', {
-      to: 'djtouchette1993@gmail.com', // REQUIRED. This can be a comma delimited string just like a normal email to field.
-      subject: 'Test Email', // REQUIRED.
-      otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
-    }, function (err) {
-      if (err) {
-        // handle error
-        console.log(err);
-        // res.send('There was an error sending the email');
-        return;
-      }
-      // res.send('Email Sent');
-    });
-  });
-
 }
 
 module.exports.mailTo = function ( app, email, subject ) {
@@ -44,14 +28,12 @@ module.exports.mailTo = function ( app, email, subject ) {
     if (err) {
       // handle error
       console.log(err);
-      // console.log(this);
-      // res.json({ success: false });
       return false;
     }
     else {
       return true;
     }
-    // res.send('Email Sent');
+
 
 });
 
