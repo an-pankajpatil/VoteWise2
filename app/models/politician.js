@@ -7,9 +7,15 @@ module.exports = mongoose.model('Politician', new Schema({
     user: {
       type: Schema.Types.ObjectId, ref: 'User'
     },
-    position: String, // this will be another table
-    // required: true,
     website: String,
-    questionsAnswered: Number
+    questionsAnswered: Number,
+    homeState: String,
+    homeCity: String,
+    homeZip: String,
+    positionWanted: String,
+    positionState: String,
+    positionCity: String,
+    positionCounty: String,
+    additionalInfo: Boolean
 
 }));

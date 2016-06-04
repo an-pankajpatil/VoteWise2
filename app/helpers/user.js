@@ -35,7 +35,9 @@ module.exports.storeUser = function ( params, address, res ) {
 }, function ( err, zip ) {
   if ( err ) { return res.json( helpers.response( false, err ) ); }
 
-    bcrypt.hash( password, saltRounds, function(err, hash) {
+  if ( !zip ) { return res.json( helpers.response( false, 'No zip found!' ) ); }
+  
+    bcrypt.hash( params.password, saltRounds, function(err, hash) {
 
         // create a userm, use adress id
         var user = new User({

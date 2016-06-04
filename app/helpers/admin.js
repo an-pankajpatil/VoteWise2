@@ -4,7 +4,7 @@ module.exports.rdmNum = function ( length ) {
 if ( length === undefined ) {
   length = 8;
 }
-
+console.log('heeeelllooooo');
 var text = "";
 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 

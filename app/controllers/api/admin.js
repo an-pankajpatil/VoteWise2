@@ -1,11 +1,16 @@
 
 var express = require ('express');
+
+// Models
 var User = require('../../models/user');
 var Advocate = require('../../models/advocate');
 var Interest = require('../../models/category');
+var Politician = require('../../models/politician');
+
 var jwt = require('jsonwebtoken');
 var auth = require('../../middleware/userAuth');
 var helpers = require('../../helpers/admin');
+
 
 module.exports = function( app ) {
 
@@ -30,8 +35,8 @@ module.exports = function( app ) {
   admin.get('/user/:id', function(req, res) {
     var admin = req.decoded._doc.admin;
     var id = req.param('id');
-    // console.log(id);
-    // Id passed in, find id
+
+    // Check if user is admin
     if ( admin ) {
       if ( id ) {
         User.findById( id, function(err, user) {
@@ -54,7 +59,6 @@ module.exports = function( app ) {
   });
 
   admin.get('/advocate/all', function(req, res) {
-    // Id passed in, find id
 
     Advocate.find( {} , function(err, user) {
       if ( err ) { res.json( { sucess: flase, err: err } ) };
@@ -66,9 +70,29 @@ module.exports = function( app ) {
 
   admin.get('/advocate/:id', function(req, res) {
     var id = req.param('id');
+
     Advocate.findById( id , function(err, advocate) {
       if ( err ) { res.json( { sucess: flase, err: err } ) };
       return res.json( advocate );
+    });
+
+  });
+
+  admin.get('/politician/all', function(req, res) {
+
+    Politician.find( {} , function(err, politician) {
+      if ( err ) { res.json( { sucess: flase, err: err } ) };
+      return res.json( politician );
+    });
+
+  });
+
+  admin.get('/politician/:id', function(req, res) {
+    var id = req.param('id');
+
+    Politician.findById( id , function( err, politician ) {
+      if ( err ) { res.json( { sucess: false, err: err } ) };
+      return res.json( politician );
     });
 
   });
@@ -84,7 +108,7 @@ module.exports = function( app ) {
 
   admin.delete('/user/:id', function(req, res) {
     var id = req.param('id');
-    // console.log(id);
+
     // Id passed in, find id
     if ( id ) {
       User.findById( id ).remove().exec( function ( err, user ) {
@@ -94,9 +118,10 @@ module.exports = function( app ) {
     }
   });
 
-  admin.get('/randompass', function ( req, res ) {
+  admin.get('/randompass/:length', function ( req, res ) {
     var length = req.param('length');
-    res.json( { password: helpers.rdmNum( length ) } );
+
+    return res.json( { password: helpers.rdmNum( length ) } );
 
   });
 

@@ -26,7 +26,7 @@ module.exports = function( app ) {
       var address = modelHelpers.storeAddress( params.city, params.street, params.zip, res );
 
       // Stores user in db
-      modelHelpers.storeUser( params, address,  res );
+      modelHelpers.storeUser( params, address, res );
       }
 
   else {

@@ -37,5 +37,17 @@ module.exports = function ( app ) {
       });
     });
 
+    app.get('/ziplookup/zip/:zip', function( req, res ) {
+      var zip = req.params.zip;
+
+      Zip.findOne({
+        zip: zip
+      }, function ( err, zip ) {
+        if ( err ) { return res.json({ success: false, error: err }); }
+
+        else { return res.json({ zip }); }
+      });
+    });
+
 
     }
