@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- <script type="text/javascript" src="javascript.js"></script> -->
+    <title>VoteWise API Test</title>
+  </head>
+  <body>
+    <h1>VoteWise Test</h1>
+      <button id="geoBtn" >Random Geo Div</button>
+      <div id="geoDiv"> Random GeoDiv will appear here</div>
+
+
+    Name<br>
+    <input id="name" type="text" name="name" value=""><br>
+    Username<br>
+    <input id="username" type="text" name="username" value=""><br><br>
+    Password<br>
+    <input id="password" type="text" name="password" value=""><br>
+    Email<br>
+    <input id="email" type="text" name="email" value=""><br>
+    City<br>
+    <input id="city" type="text" name="city" value=""><br>
+    Street<br>
+    <input id="street" type="text" name="street" value=""><br>
+    Zip<br>
+    <input id="zip" type="text" name="zip" value=""><br>
+
+    <button id="user"> Make a user </button>
+
+    <div id="listUser">
+    <p> User JSON object will apear here on submit </p>
+    </div>
+
+    <button id="users" >Get list of all users!</button>
+
+    <div id="listAllUsers">
+    <p> All Users will appear here ( as you can tell im very creative when testing !! haha )</p>
+    </div>
+
+
+
+
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+  <script>
+  $(function(){
+
+    // takes in Ajax call data and appends to #geoDiv
+    function displayGeo( data ) {
+      var stringData = JSON.stringify( data );
+      $( "<p>" + stringData + "</p>" ).appendTo( "#geoDiv" );
+    }
+
+    // Picks a random element from zips and makes a request for that zip
+    function geoDiv() {
+
+      var zips = ['15003', '15004', '15005', '15012', '1510'];
+      var rdmZip = zips[Math.floor( Math.random() * (4 - 0)) + 0];
+
+      $.ajax({
+        url: 'http://localhost:8080/geodivpa/zip/' + rdmZip,
+        success: displayGeo
+      });
+    }
+
+    //Makes a user of form data
+    function makeUser() {
+
+
+      $.ajax({
+        url: 'http://localhost:8080/geodivpa/zip/' + rdmZip,
+        success: displayGeo
+      });
+    }
+
+    $( "#geoBtn" ).on( "click", function ( e ) {
+      e.preventDefault();
+      geoDiv();
+    } );
+
+    $( "#user" ).on( "click", function ( e ) {
+      e.preventDefault();
+
+      var name = $('#name').val();
+      var username = $('#username').val();
+      var password = $('#password').val();
+      var email = $('#email').val();
+      var city = $('#city').val();
+      var zip = $('#zip').val();
+      var street = $('#street').val();
+
+      var formData = { name: name, username: username, password: password, email: email, city: city, zip: zip, street: street };
+
+      $.ajax({
+        url : "http://localhost:8080/user/signup",
+        type: "POST",
+        data : formData,
+        success: function( data, textStatus, jqXHR )
+        {
+          var stringData = JSON.stringify( data );
+          $( "<p>" + stringData + "</p>" ).appendTo( "#listUser" );
+
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+
+        }
+      });
+
+    });
+
+    // Loops through all users and appends them to div
+    function listUsers( data ) {
+
+      for (var i = 0; i < data.length; i++ ) {
+        console.log( data[i] );
+        $( "<p>" + JSON.stringify( data[i] ) + "</p>" ).appendTo( "#listAllUsers" );
+      }
+
+    }
+
+    // request to get all users from DB ( Token is a dev token, it won't expire until we want it to. )   
+    $('#users').on( "click", function ( e ) {
+      e.preventDefault();
+
+      var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyIkX18iOnsic3RyaWN0TW9kZSI6dHJ1ZSwiZ2V0dGVycyI6e30sIndhc1BvcHVsYXRlZCI6ZmFsc2UsImFjdGl2ZVBhdGhzIjp7InBhdGhzIjp7Il9fdiI6ImluaXQiLCJhZG1pbiI6ImluaXQiLCJwYXNzd29yZCI6ImluaXQiLCJuYW1lIjoiaW5pdCIsIl9pZCI6ImluaXQifSwic3RhdGVzIjp7Imlnbm9yZSI6e30sImRlZmF1bHQiOnt9LCJpbml0Ijp7Il9fdiI6dHJ1ZSwiYWRtaW4iOnRydWUsInBhc3N3b3JkIjp0cnVlLCJuYW1lIjp0cnVlLCJfaWQiOnRydWV9LCJtb2RpZnkiOnt9LCJyZXF1aXJlIjp7fX0sInN0YXRlTmFtZXMiOlsicmVxdWlyZSIsIm1vZGlmeSIsImluaXQiLCJkZWZhdWx0IiwiaWdub3JlIl19LCJlbWl0dGVyIjp7ImRvbWFpbiI6bnVsbCwiX2V2ZW50cyI6e30sIl9ldmVudHNDb3VudCI6MCwiX21heExpc3RlbmVycyI6MH19LCJpc05ldyI6ZmFsc2UsIl9kb2MiOnsiYWRkcmVzcyI6e30sIl9fdiI6MCwiYWRtaW4iOnRydWUsInBhc3N3b3JkIjoiJDJhJDEwJGhaTVZkR3hmcTB5U2xJMXhkSllZRk9EMUNOLmNCQXZNeUZwd0twR29qd3pxVHhmU2hVNnhlIiwibmFtZSI6IkppbSBKb25lcyIsIl9pZCI6IjU3NDI3MzBiMWMwYTVhZGYzZjdiNWUwMiJ9LCJfcHJlcyI6eyIkX19vcmlnaW5hbF9zYXZlIjpbbnVsbCxudWxsXX0sIl9wb3N0cyI6eyIkX19vcmlnaW5hbF9zYXZlIjpbXX0sImlhdCI6MTQ2NDAzNDUzOH0.TrYioCnjBxWnt0qlgH0COnAjbbepXuHs3cCQMYIIFlk';
+
+      $.ajax({
+        url: 'http://localhost:8080/admin/user/all',
+        headers: { 'x-access-token': token },
+        success: listUsers
+
+      });
+
+    });
+
+
+
+
+
+
+
+
+
+     });
+
+  </script>
+  </body>
+</html>

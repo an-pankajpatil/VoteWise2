@@ -18,8 +18,9 @@ module.exports = function( app ) {
     var isValidEmail = helpers.validEmail( params.email );
     var isValidPassword = helpers.validPassword( params.password );
     var isValidUsername = helpers.validUsername( params.username );
-    var allValid = helpers.allVallidate( isValidZip, isValidEmail, isValidPassword, isValidUsername );
-
+    // Uncomment this line for production, validations before database
+    // var allValid = helpers.allVallidate( isValidZip, isValidEmail, isValidPassword, isValidUsername );
+      var allValid = true;
     if ( allValid.validate ) {
 
       // Returns address model

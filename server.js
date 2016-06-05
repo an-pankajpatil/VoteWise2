@@ -29,7 +29,7 @@ app.set('superSecret', config.secret); // secret variable
 // =======================
 
 app.get('/', function (req, res) {
-  res.send(" Welcome to the VoteWise API, make a request to /api !");
+  res.sendFile(__dirname + '/views/index.html');
 });
 
 // use body parser so we can get info from POST and/or URL parameters

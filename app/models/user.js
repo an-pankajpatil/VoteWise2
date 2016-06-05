@@ -23,7 +23,6 @@ module.exports = mongoose.model('User', new Schema({
     },
     password: {
       type: String,
-      lowercase: true,
       required: true
     },
     geoDiv: {
