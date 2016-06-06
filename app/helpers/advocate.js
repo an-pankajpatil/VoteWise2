@@ -12,15 +12,20 @@ var jwt = require('jsonwebtoken');
 
 var helpers = require('./controllers');
 
+var NON_PROFIT = 'non-profit';
+var LOBBYIST = 'registered lobbyist';
+var CHAMBERS = 'chambers of commerce';
+
 module.exports.storeAdvocate = function ( params, address, interest, res, app ) {
 
   Geo.findOne({
   ZIPCensusTabulationArea: params.zip
 }, function ( err, zip ) {
-  
+
   if ( err ) { return res.json( helpers.response( false, err ) ); }
 
   if ( !zip ) { return res.json( helpers.response( false, 'No zip found!' ) ); }
+
   bcrypt.hash( params.password, saltRounds, function(err, hash) {
 
       // create a userm, use adress id
@@ -47,13 +52,37 @@ module.exports.storeAdvocate = function ( params, address, interest, res, app ) 
         }
 
       });
+      switch ( params.type ) {
 
+      case NON_PROFIT:
+        var advocate = new Advocate({
+
+          userId: user.id,
+          url: params.url,
+          areaOfInterest: interest,
+          confirmed: false,
+          EIN: params.EIN,
+          type: params.type
+
+        });
+
+        advocate.save( function ( err ) {
+          if (err) { return res.json( { success: false, error: err } ) }
+        });
+
+      break;
+
+
+    case LOBBYIST:
       var advocate = new Advocate({
 
         userId: user.id,
         url: params.url,
         areaOfInterest: interest,
-        confirmed: false
+        confirmed: false,
+        registrationNum: params.registrationNum,
+        governingBody: params.governingBody,
+        type: params.type
 
       });
 
@@ -61,10 +90,51 @@ module.exports.storeAdvocate = function ( params, address, interest, res, app ) 
         if (err) { return res.json( { success: false, error: err } ) }
       });
 
-    });
-});
+    break;
+
+    case CHAMBERS:
+
+    function makeRegistrationObj( params ) {
+      var registration = [];
+      var counter = -1;
+
+      params.governingBody.forEach( function( ele ) {
+        counter ++;
+        var num = params.registrationNum[ counter ];
+        registration.push( { governingBody: ele, registrationNum: num  } );
+      });
+      return registration;
+    }
+
+    var registration = makeRegistrationObj( params );
+
+      var advocate = new Advocate({
+
+        userId: user.id,
+        url: params.url,
+        areaOfInterest: interest,
+        confirmed: false,
+        registration: registration
+
+
+      });
+
+      advocate.save( function ( err ) {
+        // if (err) { return res.json( { success: false, error: err } ) }
+      });
+
+      break;
+
+      default:
+
+        return res.json( { success: false, error: "Something went wrong" } );
 
 }
+});
+
+});
+}
+
 
 module.exports.storeInterest = function ( params ) {
 

@@ -7,12 +7,9 @@ module.exports = mongoose.model('Press', new Schema({
     userId: {
       type: Schema.Types.ObjectId, ref: 'User'
     },
-    // required: true,
     mediaOutlet: String,
-    // required: true,
-    areaOfInterest: {
+    PareaOfInterest: {
       type: Schema.Types.ObjectId, ref: 'Category'
     },
-    // required: true,
     confirmed: Boolean
 }));

@@ -18,6 +18,25 @@ module.exports = mongoose.model('Advocate', new Schema({
     },
     url: {
       type: String,
-      required: true
-    } 
+      required: true,
+      lowercase: true
+    },
+    type:  {
+      type: String,
+      enum: [ "non-profit", "registered lobbyist","chambers of commerce" ],
+      lowercase: true,
+    },
+    EIN: {
+      type: Number
+    },
+    registration: [{
+      governingBody: {
+        type: String,
+        enum: [ "federal", "state" ],
+        lowercase: true
+      },
+      registrationNum: Number
+
+    }]
+
 }));
