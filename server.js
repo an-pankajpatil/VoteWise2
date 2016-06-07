@@ -24,6 +24,16 @@ var port = process.env.PORT || 8080; // used to create, sign, and verify tokens
 mongoose.connect(config.database); // connect to database
 app.set('superSecret', config.secret); // secret variable
 
+// ======================================
+// Allows cross origin requests =========
+// ======================================
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // =======================
 // Home page =============
 // =======================
