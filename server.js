@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 var config = require('./config'); // get config file
+var expressValidator = require('express-validator');
 
 // =======================
 // Import Controllers=====
@@ -45,6 +46,7 @@ app.get('/', function (req, res) {
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(expressValidator());
 
 // use morgan to log requests to the console
 app.use(morgan('dev'));

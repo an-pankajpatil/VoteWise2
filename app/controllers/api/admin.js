@@ -32,25 +32,28 @@ module.exports = function( app ) {
 
   });
 
-  admin.get('/user/:id', function(req, res) {
+  admin.get('/user/:id', function(req, res, next) {
     var admin = req.decoded._doc.admin;
     var id = req.param('id');
+    var userResponse = [];
 
     // Check if user is admin
     if ( admin ) {
       if ( id ) {
-        User.findById( id, function(err, user) {
-          if ( err ) { res.json( { sucess: flase, err: err } ) };
-          // console.log(user);
-          res.json( user );
+        User.findById( id, function( err, user ) {
+          if ( err ) { return res.json( { sucess: false, err: err } ) };
+          if ( user.advocate ) {
+            helpers.findAdvocate( user, res );
+          }
+          if ( user.press ) {
+            helpers.findPress ( user, res );
+          }
+          if ( user.politician ) {
+            helpers.findPolitician( user, res );
+          }
         });
       }
-      // return list of users if no id is procided
-      else {
-        User.find({}, function(err, users) {
-          res.json( users );
-        });
-      }
+
     }
 
     else {

@@ -13,7 +13,9 @@ module.exports = mongoose.model('User', new Schema({
     username: {
       type: String,
       lowercase: true,
-      required: true
+      required: true,
+      minlength: 3,
+      maxlength: 25
     },
     email: {
       type: String,

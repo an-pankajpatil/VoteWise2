@@ -21,7 +21,7 @@ module.exports = function( app ) {
     // Uncomment this line for production, validations before database
     // var allValid = helpers.allVallidate( isValidZip, isValidEmail, isValidPassword, isValidUsername );
       var allValid = true;
-    if ( allValid.validate ) {
+    if ( allValid ) {
 
       // Returns address model
       var address = modelHelpers.storeAddress( params.city, params.street, params.zip, res );

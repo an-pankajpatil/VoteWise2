@@ -16,6 +16,7 @@ var NON_PROFIT = 'non-profit';
 var LOBBYIST = 'registered lobbyist';
 var CHAMBERS = 'chambers of commerce';
 
+
 module.exports.storeAdvocate = function ( params, address, interest, res, app ) {
 
   Geo.findOne({

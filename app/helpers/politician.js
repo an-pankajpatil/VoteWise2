@@ -20,7 +20,7 @@ module.exports.storePolotician = function ( params, address, res ) {
   if ( err ) { return res.json( helpers.response( false, err ) ); }
 
   if ( !zip ) { return res.json( helpers.response( false, "Not a valid zip" ) ); }
-  
+
   bcrypt.hash( params.password, saltRounds, function(err, hash) {
 
       // create a userm, use adress id
@@ -28,9 +28,9 @@ module.exports.storePolotician = function ( params, address, res ) {
         name: params.name,
         password: hash,
         admin: false,
-        politician: false,
+        politician: true,
         press: false,
-        advocate: true,
+        advocate: false,
         address: address.id,
         email: params.email,
         geoDiv: zip.id,
@@ -67,7 +67,6 @@ module.exports.storePolotician = function ( params, address, res ) {
       politician.save( function ( err ) {
         if ( err ) { return res.json( { success: false, error: err } ) }
       });
-console.log( 'made it' );
     });
 });
 
