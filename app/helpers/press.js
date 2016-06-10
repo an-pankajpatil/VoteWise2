@@ -20,7 +20,7 @@ module.exports.storePress = function ( params, address, interest, res, app ) {
 
   bcrypt.hash( params.password, saltRounds, function(err, hash) {
 
-      // create a userm, use adress id
+      // create a user, use adress id
       var user = new User({
         name: params.name,
         password: hash,
@@ -34,7 +34,7 @@ module.exports.storePress = function ( params, address, interest, res, app ) {
         username: params.username
 
       });
-      // save the user
+
       user.save( function( err, user ) {
         if ( err ) { return res.json( helpers.response( false, err ) ); }
 

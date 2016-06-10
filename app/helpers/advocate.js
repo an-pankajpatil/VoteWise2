@@ -121,13 +121,12 @@ module.exports.storeAdvocate = function ( params, address, interest, res, app ) 
       });
 
       advocate.save( function ( err ) {
-        // if (err) { return res.json( { success: false, error: err } ) }
+        if ( err ) { return res.json( { success: false, error: err } ) }
       });
 
       break;
 
       default:
-
         return res.json( { success: false, error: "Something went wrong" } );
 
 }

@@ -8,7 +8,7 @@ module.exports.rdmNum = function ( length ) {
 if ( length === undefined ) {
   length = 8;
 }
-console.log('heeeelllooooo');
+
 var text = "";
 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -27,7 +27,6 @@ module.exports.findAdvocate = function ( user, res ) {
         if ( err ) { return res.json( { sucess: false, err: err } ) };
         return res.json ( [ user, advocate ] );
       })
-      // return res.json ( [ user, advocate ] );
   });
 }
 
@@ -39,19 +38,16 @@ module.exports.findPress = function ( user, res ) {
         if ( err ) { return res.json( { sucess: false, err: err } ) };
         return res.json ( [ user, press ] );
       })
-      // return res.json ( [ user, advocate ] );
   });
 }
 
 module.exports.findPolitician = function ( user, res ) {
   Politician.find({ userId: user.id }, function ( err, politician ) {
     if ( err ) { return res.json( { sucess: false, err: err } ) };
-    console.log( politician );
       AreaOfInterest.findById( politician.areaOfInterest, function ( err, interests ){
         console.log( interests );
         if ( err ) { return res.json( { sucess: false, err: err } ) };
         return res.json ( [ user, politician ] );
       })
-      // return res.json ( [ user, advocate ] );
   });
 }

@@ -26,7 +26,6 @@ module.exports = function( app ) {
 
     User.find( {} , function(err, user) {
       if ( err ) { res.json( { sucess: flase, err: err } ) };
-      // console.log(user);
       res.json( user );
     });
 

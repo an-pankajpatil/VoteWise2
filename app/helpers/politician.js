@@ -16,7 +16,7 @@ module.exports.storePolotician = function ( params, address, res ) {
 
   Geo.findOne({
   ZIPCensusTabulationArea: params.zip
-}, function ( err, zip ) {
+    }, function ( err, zip ) {
   if ( err ) { return res.json( helpers.response( false, err ) ); }
 
   if ( !zip ) { return res.json( helpers.response( false, "Not a valid zip" ) ); }
