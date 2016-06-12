@@ -37,6 +37,7 @@ module.exports = mongoose.model('Advocate', new Schema({
       },
       registrationNum: Number
 
-    }]
+    }],
+    created: { type: Date, default: Date.now }
 
 }));

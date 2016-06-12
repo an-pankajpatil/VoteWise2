@@ -13,7 +13,7 @@ module.exports = function( app ) {
 
   app.post('/press/signup', function(req, res) {
     var params = req.body;
-    // console.log(req.body);
+
     bcrypt.hash(params.password, saltRounds, function(err, hash) {
       if ( err ) {
         return res.json({ success: false, error: err });

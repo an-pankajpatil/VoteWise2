@@ -11,6 +11,8 @@ module.exports = mongoose.model('Address', new Schema({
   zip: {
     type: Number,
     required: true
-  }
+  },
+  created: { type: Date, default: Date.now }
+
 
 }));

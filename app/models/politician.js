@@ -16,6 +16,7 @@ module.exports = mongoose.model('Politician', new Schema({
     positionState: String,
     positionCity: String,
     positionCounty: String,
-    additionalInfo: Boolean
+    additionalInfo: Boolean,
+    created: { type: Date, default: Date.now }
 
 }));

@@ -11,5 +11,6 @@ module.exports = mongoose.model('Press', new Schema({
     areaOfInterest: {
       type: Schema.Types.ObjectId, ref: 'Category'
     },
-    confirmed: Boolean
+    confirmed: Boolean,
+    created: { type: Date, default: Date.now }
 }));
