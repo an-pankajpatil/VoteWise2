@@ -6,6 +6,11 @@ var User = require('./user');
 var Fips = require('./fips');
 var Zip = require('./zipToState');
 var Geo = require('./geoDivPa');
+var Thread = require('./thread');
+var Post = require('./post');
+var auth = require('../../middleware/userAuth');
+
+
 
 module.exports = ( app ) => {
     Admin( app );
@@ -16,4 +21,7 @@ module.exports = ( app ) => {
     Fips( app );
     Zip( app );
     Geo( app );
+    Thread( app );
+    Post( app );
+
 };

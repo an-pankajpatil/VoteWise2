@@ -43,7 +43,7 @@ module.exports = function( app ) {
 
     User.findOne({
       email: req.body.email
-    }, function(err, user ) {
+    }, function( err, user ) {
 
       if ( err ) { return result.json( helpers.response( false, err ) ); };
 

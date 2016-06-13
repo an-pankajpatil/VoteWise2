@@ -2,59 +2,11 @@ const jwt    = require('jsonwebtoken');
 const config = require('../../config');
 const bcrypt = require('bcrypt');
 
-module.exports = function ( api, app, User ) {
+module.exports = function ( api, app ) {
 
   app.set('superSecret', config.secret);
 
-  api.post('/authenticate', function(req, result) {
-    'use strict';
-    // find the user
-  User.findOne({
-    name: req.body.name
-  }, ( err, user ) => {
-    if ( err ) throw err;
-
-  })
-
-    User.findOne({
-      name: req.body.name
-    }, function(err, user ) {
-
-      if ( err ) throw err;
-
-      if ( !user ) {
-        result.json({ success: false, message: 'Authentication failed.' });
-      }
-
-      else if ( user ) {
-
-          const password = bcrypt.compareSync(req.body.password, user.password);
-
-          if ( password ) {
-
-            const token = jwt.sign(user, app.get('superSecret'), {
-              // expiresInMinutes: 1440 // expires in 24 hours
-            });
-
-            // If user is found and password is right
-            // create a token
-            // return the information including token as JSON
-            result.json({
-              success: true,
-              message: 'Enjoy your token!',
-              token: token
-          });
-
-          }
-          else {
-            result.json({ sucess: false, message: 'Authentication failed.'});
-      }
-
-  }
-});
-});
-
-  api.use(function(req, res, next) {
+  api.use( function( req, res, next ) {
     'use strict';
     // check header or url parameters or post parameters for token
     const token = req.body.token || req.query.token || req.headers['x-access-token'];

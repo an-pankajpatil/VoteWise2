@@ -15,7 +15,7 @@ var helpers = require('../../helpers/admin');
 module.exports = function( app ) {
 
   var admin = express.Router();
-  auth( admin, app, User );
+  auth( admin, app );
 
   admin.get('/', function(req, res) {
     res.send(" Welcome to the VoteWise Admin API, make a request to /admin. Good spot for a dashboard.");
@@ -33,6 +33,7 @@ module.exports = function( app ) {
 
   admin.get('/user/:id', function(req, res, next) {
     var admin = req.decoded._doc.admin;
+    console.log( admin );
     var id = req.param('id');
     var userResponse = [];
 
