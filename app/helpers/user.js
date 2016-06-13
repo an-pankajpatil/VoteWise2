@@ -21,22 +21,22 @@ module.exports.storeAddress = function ( city, street, zip, res ) {
 
   // Saving adress
   address.save( function ( err, address ) {
-    if ( err ) { return res.json( helpers.response( false, err ) ); }
+    // if ( err ) { return res.json( { success: false, error: err } ); }
   });
 
   return address;
 
 }
 
-module.exports.storeUser = function ( params, address, res ) {
+module.exports.storeUser = function ( params, address, res, app ) {
 
   Geo.findOne({
-  ZIPCensusTabulationArea: params.zip
+  ZIPCensusTabulationArea: address.zip
 }, function ( err, zip ) {
-  if ( err ) { return res.json( helpers.response( false, err ) ); }
+  // if ( err ) { return res.json( { success: false, error: err } ); }
 
-  if ( !zip ) { return res.json( helpers.response( false, 'No zip found!' ) ); }
-  
+  if ( !zip ) { return res.json( { success: false, error: 'Not a valid zip' } ); }
+
     bcrypt.hash( params.password, saltRounds, function(err, hash) {
 
         // create a userm, use adress id
@@ -54,15 +54,15 @@ module.exports.storeUser = function ( params, address, res ) {
         });
         // save the user
         user.save( function( err, user ) {
-          if ( err ) { return res.json( helpers.response( false, err ) ); }
+          if ( err ) { return res.json( { success: false, error: err } ); }
 
           else {
-            res.json( helpers.response( false ) );
-            // mailer.mailTo( app, user.email, 'Thank you for signing up!' );
+            mailer.mailTo( app, user.email, 'Thank you for signing up!' );
+            return res.json( { success: true, user: user } );
+
           }
 
         });
-        return user;
       });
 });
 

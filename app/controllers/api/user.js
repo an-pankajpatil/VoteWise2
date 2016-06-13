@@ -14,26 +14,20 @@ module.exports = function( app ) {
 
     // Validations
     var params = req.body;
-    var isValidZip = helpers.validZip( params.zip );
-    var isValidEmail = helpers.validEmail( params.email );
-    var isValidPassword = helpers.validPassword( params.password );
-    var isValidUsername = helpers.validUsername( params.username );
+    // var isValidZip = helpers.validZip( params.zip );
+    // var isValidEmail = helpers.validEmail( params.email );
+    // var isValidPassword = helpers.validPassword( params.password );
+    // var isValidUsername = helpers.validUsername( params.username );
     // Uncomment this line for production, validations before database
     // var allValid = helpers.allVallidate( isValidZip, isValidEmail, isValidPassword, isValidUsername );
-      var allValid = true;
-    if ( allValid ) {
+      // var allValid = true;
 
       // Returns address model
       var address = modelHelpers.storeAddress( params.city, params.street, params.zip, res );
 
       // Stores user in db
-      modelHelpers.storeUser( params, address, res );
-      }
+      modelHelpers.storeUser( params, address, res, app );
 
-  else {
-    var response = helpers.response( allValid, allValid.err );
-    return res.json( response );
-  }
 
   });
 

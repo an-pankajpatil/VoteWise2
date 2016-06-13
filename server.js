@@ -9,6 +9,7 @@ var morgan = require('morgan');
 var mongoose = require('mongoose');
 var config = require('./config'); // get config file
 var expressValidator = require('express-validator');
+var cors = require('cors');
 
 // =======================
 // Import Controllers=====
@@ -28,6 +29,7 @@ app.set('superSecret', config.secret); // secret variable
 // ======================================
 // Allows cross origin requests =========
 // ======================================
+app.use(cors());
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

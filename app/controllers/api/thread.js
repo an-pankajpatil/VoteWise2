@@ -50,7 +50,7 @@ module.exports = function( app ) {
   });
 
   api.get('/thread/all', function(req, res) {
-      console.log( req.decoded );
+
       Thread.find( {} , function ( err, thread ) {
         if ( err ) { return res.json( { success: false, error: err } ) }
 
@@ -80,9 +80,25 @@ module.exports = function( app ) {
     });
   });
 
+  api.get( '/thread/user/geo', function ( req, res ) {
+    var userId = req.decoded._doc._id;
 
+      if ( userId ) {
+        User.findById( userId, function( err, user ) {
+          if ( err ) { return res.json( { sucess: false, err: err } ) };
+          if ( !user ) { return res.json( { success: false, err: 'Couldnt validate, please sign in' } ) };
 
+          Thread.find( { geo: user.geoDiv  } , function ( err, thread ) {
+            if ( err ) { return res.json( { success: false, error: err } ) }
+            if ( !thread ) { return res.json( { success: false, error: 'No thread by that ID found!' } ) }
 
-app.use('/api', api);
+            return res.json( { success: true, thread: thread }  );
+          });
+        });
+    }
 
-}
+    });
+
+    app.use('/api', api);
+
+  }
