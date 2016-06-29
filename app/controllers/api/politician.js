@@ -8,7 +8,7 @@ var politicianHelper = require('../../helpers/politician');
 
 // Auth
 var saltRounds = 10;
-var bcrypt      = require('bcrypt');
+var bcrypt = require('bcrypt');
 
 
 module.exports = function( app ) {

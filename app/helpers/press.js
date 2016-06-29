@@ -14,9 +14,15 @@ module.exports.storePress = function ( params, address, interest, res, app ) {
   ZIPCensusTabulationArea: params.zip
 }, function ( err, zip ) {
 
-  if ( err ) { return res.json( helpers.response( false, err ) ); }
+  if ( err ) {
+    res.status = 400;
+    return res.json( helpers.response( false, err ) );
+   }
 
-  if ( !zip ) { return res.json( helpers.response( false, 'No zip found!' ) ); }
+  if ( !zip ) {
+    res.status = 400;
+    return res.json( helpers.response( false, 'No zip found!' ) );
+  }
 
   bcrypt.hash( params.password, saltRounds, function(err, hash) {
 
@@ -36,7 +42,10 @@ module.exports.storePress = function ( params, address, interest, res, app ) {
       });
 
       user.save( function( err, user ) {
-        if ( err ) { return res.json( helpers.response( false, err ) ); }
+        if ( err ) {
+          res.status = 400;
+          return res.json( helpers.response( false, err ) );
+        }
 
         else {
           mailer.mailTo( app, user.email, 'Thank you for signing up!' );

@@ -10,6 +10,20 @@ var modelHelpers = require('../../helpers/user');
 
 module.exports = function( app ) {
 
+  app.get('/check/username/:username', function(req, res) {
+    var username = req.params.username;
+
+    const taken = modelHelpers.isUsernameTaken(username, res)
+
+  });
+
+  app.get('/check/email/:email', function(req, res) {
+    var email = req.params.email;
+
+    const taken = modelHelpers.isEmailTaken(email, res)
+
+  });
+
   app.post('/user/signup', function(req, res) {
 
     // Validations

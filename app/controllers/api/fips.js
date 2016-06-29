@@ -9,7 +9,9 @@ module.exports = function ( app ) {
     Fips.findOne({
       stateAbr: state
     }, function ( err, fips ) {
-      if ( err ) { res.json({ success: false, error: err }); }
+      if ( err ) {
+        return res.json({ success: false, error: err });
+      }
 
       else { res.json({ fips }); }
     });

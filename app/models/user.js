@@ -7,8 +7,7 @@ const Schema = mongoose.Schema;
 module.exports = mongoose.model('User', new Schema({
     name:{
       type: String,
-      lowercase: true,
-      required: true
+      lowercase: true
     },
     username: {
       type: String,

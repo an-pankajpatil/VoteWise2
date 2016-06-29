@@ -7,10 +7,9 @@ module.exports = mongoose.model('Address', new Schema({
   city: String,
   county: String,
   street: String,
-  streetNumber: Number,
+  state: String,
   zip: {
-    type: Number,
-    required: true
+    type: Number
   },
   created: { type: Date, default: Date.now }
 

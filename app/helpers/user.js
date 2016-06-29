@@ -11,6 +11,30 @@ var jwt = require('jsonwebtoken');
 
 var helpers = require('./controllers');
 
+module.exports.isUsernameTaken = function ( username, res ) {
+  var valid;
+  User.findOne({
+    username: username
+  }, function ( err, user ) {
+    if (err) { return res.json({ taken: true }); }
+    if (user) { return res.json({ taken: true }); }
+
+    return res.json({ taken: false });
+  });
+}
+
+module.exports.isEmailTaken = function ( email, res ) {
+  var valid;
+  User.findOne({
+    email: email
+  }, function ( err, user ) {
+    if (err) { return res.json({ taken: true }); }
+    if (user) { return res.json({ taken: true }); }
+
+    return res.json({ taken: false });
+  });
+}
+
 module.exports.storeAddress = function ( city, street, zip, res ) {
   // Making new adress
   var address = new Address({
@@ -21,7 +45,9 @@ module.exports.storeAddress = function ( city, street, zip, res ) {
 
   // Saving adress
   address.save( function ( err, address ) {
-    // if ( err ) { return res.json( { success: false, error: err } ); }
+    if (err) {
+      res.status(400);
+    }
   });
 
   return address;
@@ -33,13 +59,15 @@ module.exports.storeUser = function ( params, address, res, app ) {
   Geo.findOne({
   ZIPCensusTabulationArea: address.zip
 }, function ( err, zip ) {
-  // if ( err ) { return res.json( { success: false, error: err } ); }
 
-  if ( !zip ) { return res.json( { success: false, error: 'Not a valid zip' } ); }
+  if ( !zip ) {
+    res.status(400);
+    return res.json( { success: false, error: 'Not a valid zip' } );
+  }
 
     bcrypt.hash( params.password, saltRounds, function(err, hash) {
 
-        // create a userm, use adress id
+        // create a user, use adress id
         var user = new User({
           name: params.name,
           password: hash,
@@ -54,7 +82,10 @@ module.exports.storeUser = function ( params, address, res, app ) {
         });
         // save the user
         user.save( function( err, user ) {
-          if ( err ) { return res.json( { success: false, error: err } ); }
+          if ( err ) {
+            res.status(400);
+            return res.json( { success: false, error: err } );
+           }
 
           else {
             mailer.mailTo( app, user.email, 'Thank you for signing up!' );
