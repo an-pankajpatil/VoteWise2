@@ -10,7 +10,8 @@ var Thread = require('./thread');
 var Post = require('./post');
 var auth = require('../../middleware/userAuth');
 
-
+var Categories = require('./categories');
+var Questions = require('./questions');
 
 module.exports = ( app ) => {
     Admin( app );
@@ -23,5 +24,6 @@ module.exports = ( app ) => {
     Geo( app );
     Thread( app );
     Post( app );
-
+    Categories (app);
+    Questions (app);
 };

@@ -56,7 +56,7 @@ module.exports = mongoose.model('User', new Schema({
     address: {
       type: Schema.Types.ObjectId, ref: 'Address',
       required: true
-   },
+    },
 
    created: { type: Date, default: Date.now }
 
