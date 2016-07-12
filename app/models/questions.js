@@ -11,8 +11,9 @@ module.exports = mongoose.model('Questions', new Schema({
     content: {type: String, required :true},
     categories: [{
     		cid: {
-    			type: Schema.Types.ObjectId, ref: 'Category'
-    		}
+    			type: Schema.Types.ObjectId, ref: 'Category',
+    		},
+    		viewOrder: Number
         }],
     created: { type: Date, default: Date.now }
 }));

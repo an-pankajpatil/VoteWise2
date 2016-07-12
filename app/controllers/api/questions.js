@@ -22,14 +22,19 @@ module.exports = function( app ) {
       modelHelpers.isValidUser(params.author, function (isValidAuthor) {
         if(isValidAuthor){
           var arrCatIds = params.categoryIds ? params.categoryIds.split(",") : [];
+          var arrViewOrders = params.viewOrders ? params.viewOrders.split(",") : [];
+          
+          if(arrCatIds.length != arrViewOrders.length){
+            return res.json({success: false, error: "Category ids length is not matching with the order's list."});
+          }
+
           modelHelpers.isValidCategoryIds(arrCatIds, function(isValidCategory) {
             if(isValidCategory){
-              return res.json({success: true, error: "Testing"});
+              modelHelpers.storeQuestion(params.author, params.content, arrCatIds, arrViewOrders, res, app);
             }
             else{
               return res.json({success: false, error: "Invalid category IDs."});
             }
-            
           });
         }
         else{
@@ -62,9 +67,44 @@ module.exports = function( app ) {
       */
   });
 
+  app.post('/questions/update', function(req, res) {
+    var params = req.body;
+    
+      var verifydRes = commonHelpers.verfiyRequiredFields(['id'], req.body, res); //verify require fields
+      if(!verifydRes.success){
+        return res.json(verifydRes);
+      }
+
+      modelHelpers.isQuestionExist(params.id, function (isValidQues) {
+        if(isValidQues){
+          
+          var arrCatIds = params.categoryIds ? params.categoryIds.split(",") : [];
+          var arrViewOrders = params.viewOrders ? params.viewOrders.split(",") : [];
+          
+          if(arrCatIds.length != arrViewOrders.length){
+            return res.json({success: false, error: "Category ids length is not matching with the order's list."});
+          }
+
+          modelHelpers.isValidCategoryIds(arrCatIds, function(isValidCategory) {
+            if(isValidCategory){
+              modelHelpers.updateQuestion(params.id, params.content, arrCatIds, arrViewOrders, res, app);
+            }
+            else{
+              return res.json({success: false, error: "Invalid category IDs."});
+            }
+          });
+          
+          //return res.json({success: false, error: "Question exist."});
+        }
+        else{
+          return res.json({success: false, error: "Question doesn't exist."});
+        }
+      });
+  });
+
   app.get('/questions/list', function(req, res) {
     var params = req.query;
-    modelHelpers.getCategory(params, res, app);
+    modelHelpers.getQuestions(params, res, app);
   });
 
   app.post('/questions/remove', function(req, res) {
@@ -76,8 +116,7 @@ module.exports = function( app ) {
         return res.json(verifydRes);
       }
 
-
-      modelHelpers.removeCategory(params.id, res, app);
+      modelHelpers.removeQuestion(params.id, res, app);
 
   });
 }

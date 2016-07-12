@@ -16,17 +16,34 @@ module.exports.isValidUser = function ( id, cb ) {
   console.log("isValidUser id: ",id);
   User.find({
     _id: id
-  }, {_id: 1}, function ( err, category ) {
+  }, {_id: 1}, function ( err, resData ) {
     console.log("err: ",err);
-    console.log("category: ",category);
+    console.log("resData: ",resData);
 
     if (err) return cb(false);
-    if (category) return cb(true);
+    if (resData) {
+      return (resData.length > 0) ? cb(true) : cb(false); 
+    };
+  });
+};
+
+module.exports.isQuestionExist = function ( id, cb ) {
+  console.log("isQuestionExist id: ",id);
+  Questions.find({
+    _id: id
+  }, {_id: 1}, function ( err, resData ) {
+    console.log("err: ",err);
+    console.log("resData : ",resData);
+
+    if (err) return cb(false);
+    if (resData) {
+      return (resData.length > 0) ? cb(true) : cb(false); 
+    };
   });
 };
 
 module.exports.isValidCategoryIds = function ( ids, cb ) {
-  console.log("ids: ",ids);
+  console.log("isValidCategoryIds: ",ids);
   Category.find({
     _id: {$in: ids}
   }, {_id: 1}, function ( err, category ) {
@@ -44,21 +61,30 @@ module.exports.isValidCategoryIds = function ( ids, cb ) {
   });
 }
 
-module.exports.storeQuestion = function (author, content, categories, res, app) {
+module.exports.storeQuestion = function (author, content, categories, viewOrders, res, app) {
   // Adding new question
+  var arrCategories = [];
+  //length of categories and vieworders must be same
+  categories.forEach(function (val, key) {
+    arrCategories.push({cid: val, viewOrder: viewOrders[key]});
+  });
+
+  console.log("arrCategories: ", arrCategories);
 
   var question = new Questions({
     author: author,
     content: content,
-    categories: categories
+    categories: arrCategories
   });
 
+
+  //return res.json({success: true, error: "Unable to add question."});
+  
   // Saving question
-  Questions.save( function ( err, resData ) {
+  question.save( function ( err, resData ) {
     if (err) {
       //res.status(400);
-      console.log("err: ",err);
-      return res.json( { success: false, error: "Unable to add question." } );
+      return res.json( { success: false, error: err } );
     }
 
     if(resData){
@@ -67,87 +93,95 @@ module.exports.storeQuestion = function (author, content, categories, res, app) 
   });
 }
 
-module.exports.getCategory = function (params, res, app) {
+module.exports.updateQuestion = function (id, content, categories, viewOrders, res, app) {
+  // Updating existing question
+  
+  var query = {  };
+  if(content){
+    query.content = content;
+  }
+
+  if(categories && categories.length > 0){
+    categories.forEach(function (val, key) {
+      arrCategories.push({cid: val, viewOrder: viewOrders[key]});
+    });
+
+    query.categories = arrCategories;  
+  }
+
+  console.log("update query: ", query);
+
+  Questions.update({_id: id}, query, {multi: false}, function (err, resData) {
+    if(err) return res.json({success: false, error: err});
+    if(resData) return res.json({success: true, data: resData});
+  });
+}
+
+module.exports.getQuestions = function (params, res, app) {
+  console.log("** getQuestions **");
   // list all categories
   /*
-  Category.remove({}, function ( err, user ) {
-    if (err) console.log("unable to delte all");
+  Questions.remove({}, function ( err, user ) {
+    if (err) console.log("Unable to delte all");
     if (user) console.log("delte all");
   });
   */
-
+  
   console.log("params: ",params);
-  if(params.parentId){
-    //show all the subcategories of given parent id
-    // searchParam = { parentIds: { $elemMatch: { pid: params.parentId } } };
-    
-    Category.aggregate({$project: {_id: 1, title: 1, description: 1, parentIds: 1}}, {$unwind: "$parentIds"})
-    .sort({ "parentIds.viewOrder" : 1})
+  if(params.categoryId){
+    Questions.aggregate({$project: {_id: 1, author: 1, content: 1, created: 1, categories: 1}}, {$unwind: "$categories"})
+    .sort({ "categories.viewOrder" : -1})
     .exec(function ( err, resData ) {
       if (err) return res.json({success: false, error: err});
-      // if (resData) return res.json({success: false, data: user});
+      // if (resData) return res.json({success: false, data: resData});
       if (resData){
         var temp = [];
         resData.forEach(function(val, key){
-          if(val.parentIds.pid == params.parentId){
+          if(val.categories.cid == params.categoryId){
             var obj = val
-            obj.order = val.parentIds.viewOrder;
-            //delete obj.parentIds;
+            obj.order = val.categories.viewOrder;
+            //delete obj.categories;
             temp.push(obj);
           }
         });
         return res.json({success: true, data: temp})
-      };
+      }
+    });
+  }
+  else if(params.authorId){
+    //show all categories
+    Questions.find({author: params.authorId}, {})
+    .exec(function ( err, resData ) {
+      if (err) return res.json({success: false, error: err});
+      if (resData) return res.json({success: true, data: resData});
     });
   }
   else if(params.id){
-    Category.find({_id: params.id}, {_id: 1, title: 1, description: 1, parentIds: 1})
-    .exec(function ( err, user ) {
+    //show all categories
+    console.log("showing for id *");
+    Questions.find({_id: params.id}, {})
+    .exec(function ( err, resData ) {
       if (err) return res.json({success: false, error: err});
-      if (user) return res.json({success: true, data: user});
+      if (resData) return res.json({success: true, data: resData});
     });
   }
   else{
     //show all categories
-    Category.find({}, {_id: 1, title: 1, description: 1, parentIds: 1})
-    .exec(function ( err, user ) {
+    Questions.find({}, {})
+    .exec(function ( err, resData ) {
       if (err) return res.json({success: false, error: err});
-      if (user) return res.json({success: true, data: user});
+      if (resData) return res.json({success: true, data: resData});
     });
   }
+  
 }
 
-module.exports.removeCategory = function ( id, res, app ) {
+module.exports.removeQuestion = function ( id, res, app ) {
 
-  console.log("removeCategory: 2", id);
+  console.log("removeQuestion: ", id);
 
-  Category.find({_id: id}, {_id: 1, title: 1, parentIds: 1})
-  .exec(function ( err, resData ) {
-    if (err) return res.json({success: false, error: err});
-    if (resData) {
-      Category.remove({_id: id}, function ( err, delData ) {
-        if (err) console.log("unable to delte all");
+  Questions.remove({_id: id}, function ( err, delData ) {
+        if (err) res.json({success: false, error: err});
         if (delData) res.json({success: true, data: delData});
-      });
-
-
-      Category.find({ parentIds: { $elemMatch: { pid: id } } }, {_id: 1})
-      .sort({ "parentIds.viewOrder" : 1})
-      .exec(function ( err, selData ) {
-        if(selData){
-          selData.forEach(function(val, key){
-            //remove subcategories if any
-            console.log("* subcategories: ", val._id);
-            Category.update({_id: val._id},
-              { $pull:  {parentIds: { pid: id }} },
-              {multi: true})
-            .exec(function ( err, delData2 ) {
-              if (err) console.log("unable to delte all", err);
-              if (delData2) console.log("deleted key: "+key+" delData: "+delData2);;
-            });
-          });
-        }
-      });
-    };//resData
-  });//find
+  });
 }

@@ -12,6 +12,7 @@ var auth = require('../../middleware/userAuth');
 
 var Categories = require('./categories');
 var Questions = require('./questions');
+var Answers = require('./answers');
 
 module.exports = ( app ) => {
     Admin( app );
@@ -26,4 +27,5 @@ module.exports = ( app ) => {
     Post( app );
     Categories (app);
     Questions (app);
+    Answers(app);
 };

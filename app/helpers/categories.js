@@ -90,7 +90,7 @@ module.exports.getCategory = function (params, res, app) {
           if(val.parentIds.pid == params.parentId){
             var obj = val
             obj.order = val.parentIds.viewOrder;
-            //delete obj.parentIds;
+            delete obj.parentIds;
             temp.push(obj);
           }
         });
@@ -104,6 +104,14 @@ module.exports.getCategory = function (params, res, app) {
       if (err) return res.json({success: false, error: err});
       if (user) return res.json({success: true, data: user});
     });
+  }
+  else if(params.root == 1){
+    //show all root categories
+    Category.find({parentIds: []}, {_id: 1, title: 1, description: 1, parentIds: 1})
+    .exec(function ( err, user ) {
+      if (err) return res.json({success: false, error: err});
+      if (user) return res.json({success: true, data: user});
+    });  
   }
   else{
     //show all categories
