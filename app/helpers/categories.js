@@ -100,9 +100,15 @@ module.exports.getCategory = function (params, res, app) {
   }
   else if(params.id){
     Category.find({_id: params.id}, {_id: 1, title: 1, description: 1, parentIds: 1})
-    .exec(function ( err, user ) {
+    .exec(function ( err, resData ) {
       if (err) return res.json({success: false, error: err});
-      if (user) return res.json({success: true, data: user});
+      //if (resData) return res.json({success: true, data: resData});
+      if(resData && resData.length == 1){
+        return res.json({success: true, data: resData[0]});
+      }
+      else{
+        return res.json({success: true, data: null})
+      }
     });
   }
   else if(params.root == 1){

@@ -130,7 +130,7 @@ module.exports.getQuestions = function (params, res, app) {
   console.log("params: ",params);
   if(params.categoryId){
     Questions.aggregate({$project: {_id: 1, author: 1, content: 1, created: 1, categories: 1}}, {$unwind: "$categories"})
-    .sort({ "categories.viewOrder" : -1})
+    .sort({ "categories.viewOrder" : 1})
     .exec(function ( err, resData ) {
       if (err) return res.json({success: false, error: err});
       // if (resData) return res.json({success: false, data: resData});
