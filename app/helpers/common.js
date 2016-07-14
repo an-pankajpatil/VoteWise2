@@ -1,3 +1,5 @@
+var jwt = require('jsonwebtoken');
+
 module.exports.verfiyRequiredFields = function ( params, reqParams) {
   var len = params.length;
   var notDefined = [];
@@ -13,5 +15,21 @@ module.exports.verfiyRequiredFields = function ( params, reqParams) {
   else{
     return ( { success: true, error: null } );
   }
+}
+
+module.exports.getUserFromToken = function ( token, app, cb) {
+  jwt.verify(token, app.get('superSecret'), function(err, decoded){
+    if(err) cb({success: false, data: err});
+    if(decoded){
+      try{
+        console.log("in try: ", decoded);
+        cb ({success: true, data: decoded["_doc"]});
+      }
+      catch(e){
+        console.log("excetption: ", decoded);
+        cb ({success: false, data: e});
+      }
+    }
+  });
 }
 

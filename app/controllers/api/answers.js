@@ -11,45 +11,72 @@ var modelHelpers = require('../../helpers/answers');
 var commonHelpers = require('../../helpers/common');
 
 module.exports = function( app ) {
+  /*
+  app.post('/answers/test', function(req, res) {
+    var params = req.body;
+    
+    if(params.token){
+      jwt.verify(params.token, app.get('superSecret'), function(err, decoded){
+        console.log("decoded: ",decoded);
+        if(err) return res.json({success: "t1", error: err});
+        if(decoded) res.json({success: "t2", error: decoded});
+      });
+    }
+    else{
+      return res.json({success: false, error: "Pass token"});
+    }
+  });
+  */
 
   app.post('/answers/create', function(req, res) {
     var params = req.body;
     
-      var verifydRes = commonHelpers.verfiyRequiredFields(['authorId', 'questionId', 'answer'], params, res); //verify require fields
+      var verifydRes = commonHelpers.verfiyRequiredFields(['questionId', 'answer', "token"], params, res); //verify require fields
       if(!verifydRes.success){
         return res.json(verifydRes);
       }
 
-      modelHelpers.isValidUser(params.authorId, function (isValidAuthor) {
-        if(isValidAuthor){
-          modelHelpers.isQuestionExist(params.questionId, function(isValidQues){
-            if(isValidQues){
-              modelHelpers.isAlreadyAnswered(params.authorId, params.questionId, function(isAnswered){
-                console.log("isAnswered: ",isAnswered);
-                if(!isAnswered){
+      commonHelpers.getUserFromToken(params.token, app, function(tokenData){
+        if(tokenData.success){
+          var authorId = tokenData.data._id;
 
-                  if(params.importance && (params.importance <1 || params.importance >3)){
-                    return res.json({success: false, error: "'importance' should be between 1 to 3."});  
-                  }
+          modelHelpers.isValidUser(authorId, function (isValidAuthor) {
+            if(isValidAuthor){
+              modelHelpers.isQuestionExist(params.questionId, function(isValidQues){
+                if(isValidQues){
+                  modelHelpers.isAlreadyAnswered(authorId, params.questionId, function(isAnswered){
+                    console.log("isAnswered: ",isAnswered);
+                    if(!isAnswered){
 
-                  if(params.answer && (params.answer <0 || params.answer >6)){
-                    return res.json({success: false, error: "'answer' should be between 0 to 6."});  
-                  }
+                      if(params.importance && (params.importance <1 || params.importance >3)){
+                        return res.json({success: false, error: "'importance' should be between 1 to 3."});  
+                      }
 
-                  modelHelpers.storeAnswer(params.authorId, params.questionId, params.importance, params.answer, params.comment, res, app);
-                }//isAnswered
+                      if(params.answer && (params.answer <0 || params.answer >6)){
+                        return res.json({success: false, error: "'answer' should be between 0 to 6."});  
+                      }
+
+                      modelHelpers.storeAnswer(authorId, params.questionId, params.importance, params.answer, params.comment, res, app);
+                    }//isAnswered
+                    else{
+                      return res.json({success: false, error: "User has already answered this question."});
+                    }
+                  });
+                }//isValidQues
                 else{
-                  return res.json({success: false, error: "User has already answered this question."});
+                  return res.json({success: false, error: "Question doesn't exist."});
                 }
-              });
-            }//isValidQues
+              });//isQuestionExist
+            }//isValidAuthor
             else{
-              return res.json({success: false, error: "Question doesn't exist."});
+              return res.json({success: false, error: "Author ID is invalid."});
             }
-          });//isQuestionExist
-        }//isValidAuthor
+          });
+
+          //return res.json({success: true, authorId: authorId});
+        }//tokenData.success
         else{
-          return res.json({success: false, error: "Author ID is invalid."});
+          return res.json({success: false, data: tokenData.data});
         }
       });
   });

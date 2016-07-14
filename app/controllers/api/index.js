@@ -9,10 +9,12 @@ var Geo = require('./geoDivPa');
 var Thread = require('./thread');
 var Post = require('./post');
 var auth = require('../../middleware/userAuth');
+// var votewiseSearch = require('./search');
 
 var Categories = require('./categories');
 var Questions = require('./questions');
 var Answers = require('./answers');
+
 
 module.exports = ( app ) => {
     Admin( app );
@@ -25,6 +27,7 @@ module.exports = ( app ) => {
     Geo( app );
     Thread( app );
     Post( app );
+	// votewiseSearch(app);
     Categories (app);
     Questions (app);
     Answers(app);
